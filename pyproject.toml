@@ -1,0 +1,129 @@
+[project]
+name = "histopath-intro"
+authors = [
+    {name = "arendeiro", email = "arendeiro@cemm.oeaw.ac.at"},
+]
+description = "A small project as an entry point to working with histopathology data from a deep learning perspective."
+readme = "README.md"
+keywords = [
+    "computational biology",
+    "bioinformatics",
+    "histopathology",
+]
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Development Status :: 3 - Alpha",
+    "Typing :: Typed",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+license = {text = "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"}
+requires-python = ">=3.12"
+dependencies = [
+    "anndata>=0.11.4",
+    "fa2-modified>=0.3.10",
+    "fastcluster>=1.2.6",
+    "igraph>=0.11.9",
+    "lazyslide>=0.9.2",
+    "leidenalg>=0.10.2",
+    "matplotlib>=3.10.3",
+    "networkx>=3.4.2",
+    "numpy>=1.26.4",
+    "pandas>=2.3.0",
+    "pingouin>=0.5.5",
+    "pyarrow>=20.0.0",
+    "scanpy>=1.11.3",
+    "scikit-image>=0.25.2",
+    "scikit-learn>=1.7.0",
+    "scipy>=1.15.3",
+    "seaborn>=0.13.2",
+    "torch>=2.8.0",
+    "tqdm>=4.67.1",
+]
+dynamic = ['version']
+
+[dependency-groups]
+dev = [
+    "black[d]>=25.1.0",
+    "git-lint>=0.1.2",
+    "ipython>=8.37.0",
+    "mypy>=1.16.1",
+    "pylint>=3.3.7",
+    "rich>=14.0.0",
+    "taskipy>=1.14.1",
+]
+
+[project.urls]
+homepage = "https://github.com/rendeirolab/histopath-intro"
+documentation = "https://github.com/rendeirolab/histopath-intro/blob/main/README.md"
+repository = "https://github.com/rendeirolab/histopath-intro"
+
+[build-system]
+requires = ["setuptools_scm[toml]>=6.0"]
+
+[tool.taskipy.settings]
+use_vars = true
+
+[tool.taskipy.variables]
+project_slug = "histopath-intro"
+current_date = "$(date -u +\"%Y-%m-%d %H:%M:%S UTC\")"
+
+[tool.taskipy.tasks]
+requirements = { cmd = "uv sync --dev", help = "Install Python requirements" }
+interactive = { cmd = "uv run --dev python -m IPython -i src/analysis.py", help = "Start an interactive IPython session" }
+analysis = { cmd = "uv runpython -u src/analysis.py", help = "Run all analysis steps" }
+
+[tool.setuptools]
+license-files = []  # https://github.com/astral-sh/uv/issues/9513
+
+[tool.setuptools_scm]
+write_to = "_version.py"
+write_to_template = 'version = __version__ = "{version}"'
+
+[tool.black]
+line-length = 90
+target-version = ['py312']
+include = '\.pyi?$'
+exclude = '''
+
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | foo.py           # also separately exclude a file named foo.py in
+                     # the root of the project
+)
+'''
+
+[tool.mypy]
+python_version = '3.12'
+warn_return_any = true
+warn_unused_configs = true
+
+# Packages without type annotations in shed yet
+[[tool.mypy.overrides]]
+module = [
+    'numpy.*',
+    'pandas.*',
+    'scipy.*',
+    'skimage.*',
+    'matplotlib.*',
+    'networkx.*',
+    'pingouin.*',
+    'tqdm.*',
+    'anndata.*',
+    'scanpy.*',
+    
+]
+ignore_missing_imports = true
